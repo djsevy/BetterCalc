@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'EquationCalc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,7 +26,18 @@ class BetterCalc extends StatelessWidget {
 }
 
 class CalculatorScreen extends StatefulWidget {
-  const CalculatorScreen({super.key});
+  CalculatorScreen({super.key});
+
+  //Equation class here. final Equation equationcalc;
+  //access via widget.equationcalc.property or widget.equationcalc.method() //params as necessary
+  final EquationCalc eqcalc = EquationCalc();
+
+
+  //Future<File> for storage here
+  //final HistoryStorage storage;
+  //access via widget.storage.method
+
+  //Prior to this, create the FutureFiel thing.
 
   @override
   // ignore: library_private_types_in_public_api
@@ -63,6 +76,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       if (buttonText == '=') {
         // Perform calculation
         _controller.text = _calculateResult();
+        cursorIndex = _controller.text.length;
       } else if (buttonText == 'C') {
         // Clear the output
         _controller.clear();
@@ -81,13 +95,20 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       } else if (buttonText == '>') {
         // Move cursor to the right
         if (cursorIndex < _controller.text.length) cursorIndex++;
-      } else {
+      } 
+      else {
         // Insert the button text at the cursor index
         _controller.text = _controller.text.substring(0, cursorIndex) +
             buttonText +
             _controller.text.substring(cursorIndex);
-        if (cursorIndex < _controller.text.length)
-          cursorIndex++; // Increment cursor index
+        if (cursorIndex < (_controller.text.length - buttonText.length + 1))
+          cursorIndex += buttonText.length; // Increment cursor index
+        if (buttonText == "[]√(") {
+          cursorIndex -= 3;
+        }
+        if (buttonText == "log[](") {
+          cursorIndex -= 2;
+        }
       }
       // Update cursor position
       _controller.selection = TextSelection.collapsed(offset: cursorIndex);
@@ -99,7 +120,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       // Evaluate the mathematical expression
       // You can use a library like math_expressions for this
       // Here, we'll just return the same text as an example
-      return _controller.text;
+      widget.eqcalc.setCurrentEquation(_controller.text);
+      widget.eqcalc.solve();
+      return widget.eqcalc.previousAnswer; //This is the string of things
     } catch (e) {
       return 'Error';
     }
@@ -200,14 +223,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 ],
               ),
               if (_showTrigButtons)
-                _buildToggledButtonsRow(['sin', 'cos', 'tan']),
+                _buildToggledButtonsRow(['sin(', 'cos(', 'tan^-1(']),
               if (_showExpButtons) _buildToggledButtonsRow(['exp', 'pow']),
-              if (_showSymButtons) _buildToggledButtonsRow(['√', '^2']),
+              if (_showSymButtons) _buildToggledButtonsRow(['√(', '^2']),
               if (_showLogButtons)
-                _buildToggledButtonsRow(['log', 'ln', 'log10']),
+                _buildToggledButtonsRow(['log[](', 'ln', 'log10']),
               Row(
                 children: [
-                  _buildButton('x/y'),
+                  _buildButton('[]√('),
                   _buildButton('('),
                   _buildButton(')'),
                   _buildButton('/'),
@@ -226,7 +249,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   _buildButton('4'),
                   _buildButton('5'),
                   _buildButton('6'),
-                  _buildButton('-'),
+                  _buildButton('—'),
                 ],
               ),
               Row(
