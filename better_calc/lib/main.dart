@@ -227,7 +227,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               if (_showExpButtons) _buildToggledButtonsRow(['exp', 'pow']),
               if (_showSymButtons) _buildToggledButtonsRow(['√(', '^2']),
               if (_showLogButtons)
-                _buildToggledButtonsRow(['log[](', 'ln', 'log10']),
+                _buildToggledButtonsRow(['log[](', 'ln(', 'log(']),
               Row(
                 children: [
                   _buildButton('[]√('),
