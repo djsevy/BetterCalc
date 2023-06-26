@@ -5,12 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() {
-  runApp(BetterCalc());
+  runApp(CalculatorApp());
 }
 
-class BetterCalc extends StatelessWidget {
-  const BetterCalc({super.key});
-
+class CalculatorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,38 +22,24 @@ class BetterCalc extends StatelessWidget {
 }
 
 class CalculatorScreen extends StatefulWidget {
-  const CalculatorScreen({super.key});
-
   @override
-  // ignore: library_private_types_in_public_api
   _CalculatorScreenState createState() => _CalculatorScreenState();
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  final TextEditingController _controller =
-      TextEditingController(); // New controller
+  TextEditingController _controller = TextEditingController(); // New controller
   int cursorIndex = 0; // Track the cursor index
-
-  bool _showTrigButtons = false;
-  bool _showExpButtons = false;
-  bool _showSymButtons = false;
-  bool _showLogButtons = false;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       // Simulate a tap after the app is opened
-      _simulateTap();
     });
   }
 
-  void _simulateTap() {
-    if (_controller.text.isNotEmpty) {
-      final newPosition =
-          TextSelection.collapsed(offset: _controller.text.length);
-      _controller.selection = newPosition;
-    }
+  void _adjustCursor() {
+    cursorIndex = _controller.selection.base.offset;
   }
 
   void _buttonPressed(String buttonText) {
@@ -67,14 +51,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         // Clear the output
         _controller.clear();
         cursorIndex = 0; // Reset cursor index
-      } else if (buttonText == 'Trig') {
-        _showTrigButtons = !_showTrigButtons;
-      } else if (buttonText == 'Exp') {
-        _showExpButtons = !_showExpButtons;
-      } else if (buttonText == 'Sym') {
-        _showSymButtons = !_showSymButtons;
-      } else if (buttonText == 'Log') {
-        _showLogButtons = !_showLogButtons;
       } else if (buttonText == '<') {
         // Move cursor to the left
         if (cursorIndex > 0) cursorIndex--;
@@ -169,8 +145,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               padding: EdgeInsets.all(14.0),
               alignment: Alignment.bottomRight,
               child: GestureDetector(
-                onTap: _simulateTap,
                 child: TextField(
+                  onTap: _adjustCursor,
+                  autofocus: true,
                   showCursor: true,
                   controller: _controller, // Use TextEditingController
                   style: const TextStyle(
@@ -185,32 +162,34 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             children: [
               Row(
                 children: [
-                  _buildButton("History"),
-                  _buildButton('<'), // Add button to move cursor to the left
-                  _buildButton('>'), // Add button to move cursor to the right
-                ],
-              ),
-              Row(
-                children: [
                   _buildButton('C'),
-                  _buildToggleButton('Trig', _showTrigButtons),
-                  _buildToggleButton('Exp', _showExpButtons),
-                  _buildToggleButton('Sym', _showSymButtons),
-                  _buildToggleButton('Log', _showLogButtons),
+                  _buildButton('del'),
+                  _buildButton('<'),
+                  _buildButton('>'),
                 ],
               ),
-              if (_showTrigButtons)
-                _buildToggledButtonsRow(['sin', 'cos', 'tan']),
-              if (_showExpButtons) _buildToggledButtonsRow(['exp', 'pow']),
-              if (_showSymButtons) _buildToggledButtonsRow(['√', '^2']),
-              if (_showLogButtons)
-                _buildToggledButtonsRow(['log', 'ln', 'log10']),
               Row(
                 children: [
-                  _buildButton('x/y'),
+                  _buildButton('2nd'),
+                  _buildButton('sin'),
+                  _buildButton('cos'),
+                  _buildButton('tan'),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildButton('x^y'),
+                  _buildButton('log'),
+                  _buildButton('pi'),
+                  _buildButton('%'),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildButton('x^2'),
                   _buildButton('('),
                   _buildButton(')'),
-                  _buildButton('/'),
+                  _buildButton('/')
                 ],
               ),
               Row(
