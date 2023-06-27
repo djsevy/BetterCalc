@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'EquationCalc.dart';
+import 'HistoryStorage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,7 +30,7 @@ class CalculatorScreen extends StatefulWidget {
   //Equation class here. final Equation equationcalc;
   //access via widget.equationcalc.property or widget.equationcalc.method() //params as necessary
   final EquationCalc eqcalc = EquationCalc();
-
+  final HistoryStorage historystorage = HistoryStorage();
 
   //Future<File> for storage here
   //final HistoryStorage storage;
@@ -48,6 +49,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   void initState() {
     super.initState();
+    widget.historystorage.readHistory().then((value) {
+      setState(() {
+        widget.eqcalc.setHistory(value); //Can then do a print to see it to check if it's loading properly.
+      });
+    });
+
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       // Simulate a tap after the app is opened
     });
@@ -63,6 +70,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         // Perform calculation
         _controller.text = _calculateResult();
         cursorIndex = _controller.text.length;
+        // print(_controller.text);
+        // print(widget.eqcalc.history);
+        widget.historystorage.writeToHistory(widget.eqcalc.historyString); //This is a big important
       } else if (buttonText == 'C') {
         // Clear the output
         _controller.clear();

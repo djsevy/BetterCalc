@@ -10,7 +10,8 @@ class EquationCalc {
   String currentEquation = "";
   String previousEquation = "";
   String previousAnswer = "";
-  List<String> history = [];
+  List<List<String>> history = [];
+  String historyString = "";
 
   bool errorState = false;
   String errorType = "";
@@ -19,8 +20,33 @@ class EquationCalc {
   /*
       Interaction logic
                         */
-  setHistory(List<String> imported) {
-    history = imported;
+  setHistory(String imported) {
+    // print(imported);
+    try {
+      
+      // String imported = "1+1 2 4 4 ";
+      List<String> importList = imported.trim().split(" ");
+
+      List<String> equations = [];
+      List<String> answers = [];
+      for (int i = 0; i < importList.length; i++) {
+        if (i.isEven) {
+          equations.add(importList[i]);
+        }
+        if (i.isOdd) {
+          answers.add(importList[i]);
+        }
+      }
+      for (int i = 0; i < equations.length; i++)  {
+        List<String> historyItem = [equations[i], answers[i]];
+        history.add(historyItem);
+      }
+
+      historyString = imported;
+    } catch (e) {
+      // history = []; //do nothing, as this is already true
+      //do nothing with historyString either
+    }
   }
 
   setCurrentEquation(String equation) {
@@ -47,8 +73,10 @@ class EquationCalc {
       previousAnswer = evaluated;
 
       //Add them to history
-      history.insert(0, previousEquation);
-      history.insert(0, previousAnswer);
+      List<String> historyItem = [previousEquation, previousAnswer];
+      history.insert(0, historyItem);
+      historyString = previousEquation + " " + previousAnswer + " " + historyString; //This is important to remember
+
       //is this in-app scope needed at this point?
       //deleteSync?
       //Save hsitroy to Storage
