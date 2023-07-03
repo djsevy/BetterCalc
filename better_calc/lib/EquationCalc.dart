@@ -1,9 +1,9 @@
 import 'dart:math';
 
-const String EMPTY = "ERROR: EMPTY PARENTHESES"; //May be entirely unnecessary
-const String SYNTAX_ERROR = "SYNTAX ERROR";
-const String DOMAIN_ERROR = "DOMAIN ERROR";
-const String DIVIDE_BY_ZERO = "ERROR: DIVIDE BY ZERO";
+const String EMPTY = "ERROR:_EMPTY_PARENTHESES"; //May be entirely unnecessary
+const String SYNTAX_ERROR = "SYNTAX_ERROR";
+const String DOMAIN_ERROR = "DOMAIN_ERROR";
+const String DIVIDE_BY_ZERO = "ERROR:_DIVIDE_BY_ZERO";
 
 class EquationCalc {
   //All member variables

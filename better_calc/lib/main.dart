@@ -66,9 +66,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void _buttonPressed(String buttonText) {
     setState(() {
+      if (buttonText == 'History') {
+        historyMode = !historyMode;
+      }
+      else {
+        historyMode = false;
+      }
+
       if (buttonText == '=') {
         // Perform calculation
-        _controller.text = _calculateResult();
+        _calculateResult();
+        _controller.text = "";
         cursorIndex = _controller.text.length;
         widget.historystorage.writeToHistory(
             widget.eqcalc.historyString); //This is a big important
@@ -76,7 +84,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         // Clear the output
         _controller.clear();
         cursorIndex = 0; // Reset cursor index
-      } else if (buttonText == '<') {
+        widget.historystorage.clearHistory(); //This would also normally force a setHistory to empty on eqCalc.
+      } else if (buttonText == "History") {
+
+      }
+      else if (buttonText == '<') {
         // Move cursor to the left
         if (cursorIndex > 0) cursorIndex--;
       } else if (buttonText == '>') {
@@ -101,6 +113,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       }
       // Update cursor position
       _controller.selection = TextSelection.collapsed(offset: cursorIndex);
+      
     });
   }
 
@@ -111,14 +124,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       // Here, we'll just return the same text as an example
       if (_controller.text == "") {
         return "";
-      }
-      else {
+      } else {
         widget.eqcalc.setCurrentEquation(_controller.text);
         widget.eqcalc.solve();
         firstEquation = true;
         return widget.eqcalc.previousAnswer;
       }
-       //This is the string of things
+      //This is the string of things
     } catch (e) {
       return 'Error';
     }
@@ -377,6 +389,40 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
+  Widget _buildHistoryMode() {
+    return Column(
+      children: [
+        Expanded(
+            child: Container(
+                child: Column(children: [
+          Row(children: [
+            _buildButton(''),
+          ]),
+          Row(children: [
+            _buildButton('History'),
+          ]),
+          for (int i = 0; i < this.widget.eqcalc.history.length; i++)
+            _buildHistoryItem(i),
+        ]))),
+      ],
+    );
+  }
+
+  Widget _buildHistoryItem(int Index) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [_buildEquationButton(widget.eqcalc.history[Index][0])],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [_buildEquationButton(widget.eqcalc.history[Index][1])],
+        )
+      ],
+    );
+  }
+
   Widget _buildButton(String buttonText) {
     return Expanded(
       child: ElevatedButton(
@@ -392,12 +438,20 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
+  Widget _buildModeOfCalc() {
+    if (historyMode) {
+      return _buildHistoryMode();
+    } else {
+      return _buildNormalMode();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var currentIndex = 0;
 
     return Scaffold(
-      body: _buildNormalMode(),
+      body: _buildModeOfCalc(),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
