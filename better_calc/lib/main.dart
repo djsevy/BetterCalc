@@ -47,7 +47,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   int cursorIndex = 0; // Track the cursor index
   bool historyMode = false;
   bool secondMode = false;
-  bool firstEquation = false;
+  bool firstEquationEntered = false;
 
   @override
   void initState() {
@@ -127,7 +127,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       } else {
         widget.eqcalc.setCurrentEquation(_controller.text);
         widget.eqcalc.solve();
-        firstEquation = true;
+        firstEquationEntered = true;
         return widget.eqcalc.previousAnswer;
       }
       //This is the string of things
@@ -217,11 +217,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 _buildButton('History'),
               ]),
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                _buildEquationButton(widget.eqcalc.previousEquation),
+                if (firstEquationEntered)
+                  _buildEquationButton(widget.eqcalc.previousEquation),
               ]),
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                _buildAnswerButton(widget.eqcalc.previousAnswer),
-              ]),
+              if (firstEquationEntered)
+                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  _buildAnswerButton(widget.eqcalc.previousAnswer),
+                ]),
               Expanded(
                   child: Container(
                 padding: const EdgeInsets.all(14.0),
