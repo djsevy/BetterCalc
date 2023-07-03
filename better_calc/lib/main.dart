@@ -109,9 +109,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       // Evaluate the mathematical expression
       // You can use a library like math_expressions for this
       // Here, we'll just return the same text as an example
-      widget.eqcalc.setCurrentEquation(_controller.text);
-      widget.eqcalc.solve();
-      return widget.eqcalc.previousAnswer; //This is the string of things
+      if (_controller.text == "") {
+        return "";
+      }
+      else {
+        widget.eqcalc.setCurrentEquation(_controller.text);
+        widget.eqcalc.solve();
+        firstEquation = true;
+        return widget.eqcalc.previousAnswer;
+      }
+       //This is the string of things
     } catch (e) {
       return 'Error';
     }
