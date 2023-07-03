@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'EquationCalc.dart';
 import 'HistoryStorage.dart';
 
@@ -5,12 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() {
-  runApp(const CalculatorApp());
+  runApp(CalculatorApp());
 }
 
 class CalculatorApp extends StatelessWidget {
-  const CalculatorApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,12 +43,8 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  final TextEditingController _controller =
-      TextEditingController(); // New controller
+  TextEditingController _controller = TextEditingController(); // New controller
   int cursorIndex = 0; // Track the cursor index
-  bool historyMode = false;
-  bool secondMode = false;
-  bool firstEquation = false;
 
   @override
   void initState() {
@@ -82,16 +79,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       } else if (buttonText == '>') {
         // Move cursor to the right
         if (cursorIndex < _controller.text.length) cursorIndex++;
-      } else if (buttonText == '2nd') {
-        secondMode = !secondMode;
       } else {
         // Insert the button text at the cursor index
         _controller.text = _controller.text.substring(0, cursorIndex) +
             buttonText +
             _controller.text.substring(cursorIndex);
-        if (cursorIndex < (_controller.text.length - buttonText.length + 1)) {
+        if (cursorIndex < (_controller.text.length - buttonText.length + 1))
           cursorIndex += buttonText.length; // Increment cursor index
-        }
         if (buttonText == "[]√(") {
           cursorIndex -= 3;
         }
@@ -121,9 +115,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          foregroundColor: showButtons ? Colors.white : null,
-          backgroundColor: showButtons ? Colors.blue : null,
           padding: const EdgeInsets.all(15.0),
+          primary: showButtons ? Colors.blue : null,
+          onPrimary: showButtons ? Colors.white : null,
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
@@ -157,216 +151,32 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   Widget _buildEquationButton(String buttonText) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.only(
-              left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
-          alignment: Alignment.bottomLeft),
-      onPressed: () => _buttonPressed(buttonText),
-      child: Text(
-        buttonText,
-        style: const TextStyle(fontSize: 15.0),
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+        ),
+        onPressed: () => _buttonPressed(buttonText),
+        child: Text(
+          buttonText,
+          style: const TextStyle(fontSize: 15.0),
+        ),
       ),
     );
   }
 
   Widget _buildAnswerButton(String buttonText) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.only(
-              left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
-          alignment: Alignment.topRight),
-      onPressed: () => _buttonPressed(buttonText),
-      child: Text(
-        buttonText,
-        style: const TextStyle(fontSize: 15.0),
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+        ),
+        onPressed: () => _buttonPressed(buttonText),
+        child: Text(
+          buttonText,
+          style: const TextStyle(fontSize: 15.0),
+        ),
       ),
-    );
-  }
-
-  Widget _buildNormalMode() {
-    return Column(
-      children: [
-        Expanded(
-            child: Container(
-          child: Column(
-            children: [
-              Row(children: [
-                _buildButton(''),
-              ]),
-              Row(children: [
-                _buildButton('History'),
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                _buildEquationButton(widget.eqcalc.previousEquation),
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                _buildAnswerButton(widget.eqcalc.previousAnswer),
-              ]),
-              Expanded(
-                  child: Container(
-                padding: const EdgeInsets.all(14.0),
-                alignment: Alignment.bottomRight,
-                child: GestureDetector(
-                  child: TextField(
-                    onTap: _adjustCursor,
-                    autofocus: true,
-                    showCursor: true,
-                    controller: _controller, // Use TextEditingController
-                    style: const TextStyle(
-                        fontSize: 15.0, fontWeight: FontWeight.bold),
-                    readOnly: true, // To prevent keyboard from popping up
-                  ),
-                ),
-              )),
-            ],
-          ),
-        )),
-        const Divider(),
-        if (secondMode) _buildSecondBody() else _buildFirstBody(),
-      ],
-    );
-  }
-
-  Widget _buildFirstBody() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            _buildButton('C'),
-            _buildButton('del'),
-            _buildButton('<'),
-            _buildButton('>'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('2nd'),
-            _buildButton('sin'),
-            _buildButton('cos'),
-            _buildButton('tan'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('x^y'),
-            _buildButton('log'),
-            _buildButton('pi'),
-            _buildButton('%'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('x^2'),
-            _buildButton('('),
-            _buildButton(')'),
-            _buildButton('/')
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('7'),
-            _buildButton('8'),
-            _buildButton('9'),
-            _buildButton('*'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('4'),
-            _buildButton('5'),
-            _buildButton('6'),
-            _buildButton('—'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('1'),
-            _buildButton('2'),
-            _buildButton('3'),
-            _buildButton('+'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('0'),
-            _buildButton('.'),
-            _buildButton('-'),
-            _buildButton('='),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSecondBody() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            _buildButton('C'),
-            _buildButton('del'),
-            _buildButton('<<'),
-            _buildButton('>>'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('2nd'),
-            _buildButton('sin^-1'),
-            _buildButton('cos^-1'),
-            _buildButton('tan^-1'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('x^y'),
-            _buildButton('log'),
-            _buildButton('pi'),
-            _buildButton('%'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('x^2'),
-            _buildButton('('),
-            _buildButton(')'),
-            _buildButton('/')
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('7'),
-            _buildButton('8'),
-            _buildButton('9'),
-            _buildButton('*'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('4'),
-            _buildButton('5'),
-            _buildButton('6'),
-            _buildButton('—'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('1'),
-            _buildButton('2'),
-            _buildButton('3'),
-            _buildButton('+'),
-          ],
-        ),
-        Row(
-          children: [
-            _buildButton('0'),
-            _buildButton('.'),
-            _buildButton('-'),
-            _buildButton('='),
-          ],
-        ),
-      ],
     );
   }
 
@@ -390,7 +200,108 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     var currentIndex = 0;
 
     return Scaffold(
-      body: _buildNormalMode(),
+      body: Column(
+        children: [
+          Row(children: [_buildAnswerButton('placeholder')]),
+          Expanded(
+            child: Container(
+              child: Column(
+                children: [
+                  Row(children: [
+                    _buildEquationButton(''),
+                    _buildAnswerButton('placeholder2'),
+                  ]),
+                  Expanded(
+                      child: Container(
+                    padding: EdgeInsets.all(14.0),
+                    alignment: Alignment.bottomRight,
+                    child: GestureDetector(
+                      child: TextField(
+                        onTap: _adjustCursor,
+                        autofocus: true,
+                        showCursor: true,
+                        controller: _controller, // Use TextEditingController
+                        style: const TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.bold),
+                        readOnly: true, // To prevent keyboard from popping up
+                      ),
+                    ),
+                  )),
+                ],
+              ),
+            ),
+          ),
+          const Divider(),
+          Column(
+            children: [
+              Row(
+                children: [
+                  _buildButton('C'),
+                  _buildButton('del'),
+                  _buildButton('<'),
+                  _buildButton('>'),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildButton('2nd'),
+                  _buildButton('sin'),
+                  _buildButton('cos'),
+                  _buildButton('tan'),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildButton('x^y'),
+                  _buildButton('log'),
+                  _buildButton('pi'),
+                  _buildButton('%'),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildButton('x^2'),
+                  _buildButton('('),
+                  _buildButton(')'),
+                  _buildButton('/')
+                ],
+              ),
+              Row(
+                children: [
+                  _buildButton('7'),
+                  _buildButton('8'),
+                  _buildButton('9'),
+                  _buildButton('*'),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildButton('4'),
+                  _buildButton('5'),
+                  _buildButton('6'),
+                  _buildButton('—'),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildButton('1'),
+                  _buildButton('2'),
+                  _buildButton('3'),
+                  _buildButton('+'),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildButton('0'),
+                  _buildButton('.'),
+                  _buildButton('-'),
+                  _buildButton('='),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -418,12 +329,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           } else if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const NotesPage()),
+              MaterialPageRoute(builder: (context) => NotesPage()),
             );
           } else if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
+              MaterialPageRoute(builder: (context) => SettingsPage()),
             );
           }
         },
