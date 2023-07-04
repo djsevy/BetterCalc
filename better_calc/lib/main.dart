@@ -68,8 +68,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     setState(() {
       if (buttonText == 'History') {
         historyMode = !historyMode;
-      }
-      else {
+      } else {
         historyMode = false;
       }
 
@@ -84,11 +83,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         // Clear the output
         _controller.clear();
         cursorIndex = 0; // Reset cursor index
-        widget.historystorage.clearHistory(); //This would also normally force a setHistory to empty on eqCalc.
+        widget.historystorage
+            .clearHistory(); //This would also normally force a setHistory to empty on eqCalc.
       } else if (buttonText == "History") {
-
-      }
-      else if (buttonText == '<') {
+      } else if (buttonText == '<') {
         // Move cursor to the left
         if (cursorIndex > 0) cursorIndex--;
       } else if (buttonText == '>') {
@@ -113,7 +111,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       }
       // Update cursor position
       _controller.selection = TextSelection.collapsed(offset: cursorIndex);
-      
     });
   }
 
@@ -211,7 +208,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           child: Column(
             children: [
               Row(children: [
-                _buildButton(''),
+                _buildButton(''), //TODO change this forproper spacing styling
               ]),
               Row(children: [
                 _buildButton('History'),
@@ -396,16 +393,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       children: [
         Expanded(
             child: Container(
-                child: Column(children: [
+                child: SingleChildScrollView(
+                    child: Column(children: [
           Row(children: [
-            _buildButton(''),
+            _buildButton(''), //TODO change thid in exchange for proper spacing.
           ]),
           Row(children: [
-            _buildButton('History'),
+            _buildButton('History'), //Have a horizontal bar/break here?
           ]),
           for (int i = 0; i < this.widget.eqcalc.history.length; i++)
             _buildHistoryItem(i),
-        ]))),
+        ])))),
       ],
     );
   }
