@@ -94,6 +94,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         if (cursorIndex < _controller.text.length) cursorIndex++;
       } else if (buttonText == '2nd') {
         secondMode = !secondMode;
+      } else if (buttonText == 'del') {
+        // Delete one character at a time
+        if (_controller.text.isNotEmpty && cursorIndex > 0) {
+          _controller.text = _controller.text.substring(0, cursorIndex - 1) +
+              _controller.text.substring(cursorIndex);
+          cursorIndex--;
+        }
       } else {
         // Insert the button text at the cursor index
         _controller.text = _controller.text.substring(0, cursorIndex) +
@@ -324,8 +331,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           children: [
             _buildButton('C'),
             _buildButton('del'),
-            _buildButton('<<'),
-            _buildButton('>>'),
+            _buildButton('<'),
+            _buildButton('>'),
           ],
         ),
         Row(
