@@ -1,8 +1,9 @@
 import 'EquationCalc.dart';
 import 'HistoryStorage.dart';
-
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:path_provider/path_provider.dart';
+
 
 void main() {
   runApp(const CalculatorApp());
@@ -47,7 +48,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   int cursorIndex = 0; // Track the cursor index
   bool historyMode = false;
   bool secondMode = false;
-  bool firstEquation = false;
+
+  bool firstEquationEntered = false;
+
 
   @override
   void initState() {
@@ -66,9 +69,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void _buttonPressed(String buttonText) {
     setState(() {
+      if (buttonText == 'History') {
+        historyMode = !historyMode;
+      } else {
+        historyMode = false;
+      }
+
       if (buttonText == '=') {
         // Perform calculation
-        _controller.text = _calculateResult();
+
+        _calculateResult();
+        _controller.text = "";
+
         cursorIndex = _controller.text.length;
         widget.historystorage.writeToHistory(
             widget.eqcalc.historyString); //This is a big important
@@ -76,6 +88,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         // Clear the output
         _controller.clear();
         cursorIndex = 0; // Reset cursor index
+        widget.historystorage
+            .clearHistory(); //This would also normally force a setHistory to empty on eqCalc.
+      } else if (buttonText == "History") {
       } else if (buttonText == '<') {
         // Move cursor to the left
         if (cursorIndex > 0) cursorIndex--;
@@ -116,9 +131,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       // Evaluate the mathematical expression
       // You can use a library like math_expressions for this
       // Here, we'll just return the same text as an example
-      widget.eqcalc.setCurrentEquation(_controller.text);
-      widget.eqcalc.solve();
-      return widget.eqcalc.previousAnswer; //This is the string of things
+
+      if (_controller.text == "") {
+        return "";
+      } else {
+        widget.eqcalc.setCurrentEquation(_controller.text);
+        widget.eqcalc.solve();
+        firstEquationEntered = true;
+        return widget.eqcalc.previousAnswer;
+      }
+      //This is the string of things
+
     } catch (e) {
       return 'Error';
     }
@@ -167,7 +190,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.only(
-              left: -15.0, top: 8.0, bottom: 8.0, right: 15.0),
+
+              left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
+
           alignment: Alignment.bottomLeft),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
@@ -199,17 +224,25 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           child: Column(
             children: [
               Row(children: [
-                _buildButton(''),
+
+
+                _buildButton(''), //TODO change this forproper spacing styling
+
               ]),
               Row(children: [
                 _buildButton('History'),
               ]),
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                _buildEquationButton(widget.eqcalc.previousEquation),
+
+
+                if (firstEquationEntered)
+                  _buildEquationButton(widget.eqcalc.previousEquation),
               ]),
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                _buildAnswerButton(widget.eqcalc.previousAnswer),
-              ]),
+              if (firstEquationEntered)
+                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  _buildAnswerButton(widget.eqcalc.previousAnswer),
+                ]),
+
               Expanded(
                   child: Container(
                 padding: const EdgeInsets.all(14.0),
@@ -264,7 +297,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         ),
         Row(
           children: [
+
             _buildSpecialButton('^2', 'x²'),
+
             _buildButton('('),
             _buildButton(')'),
             _buildButton('/')
@@ -313,23 +348,29 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           children: [
             _buildButton('C'),
             _buildButton('del'),
-            _buildButton('<<'),
-            _buildButton('>>'),
+
+            _buildButton('<'),
+            _buildButton('>'),
+
           ],
         ),
         Row(
           children: [
             _buildButton('2nd'),
+
             _buildSpecialButton('sin^-1(', 'sin⁻¹'),
             _buildSpecialButton('cos^-1', 'cos⁻¹'),
             _buildSpecialButton('tan^-1', 'tan⁻¹'),
+
           ],
         ),
         Row(
           children: [
+
             _buildSpecialButton('[]√(', 'ⁿ√‾‾'),
             _buildSpecialButton('log[](', 'log₍ ₎'),
             _buildSpecialButton('ℯ', '𝘦'),
+
             _buildButton('%'),
           ],
         ),
@@ -377,6 +418,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
+
   // Widget _buildIcon (String assetPath) {
   //   return const Icon(
 
@@ -395,6 +437,40 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           style: const TextStyle(fontSize: 15.0),
         ),
       ),
+
+  Widget _buildHistoryMode() {
+    return Column(
+      children: [
+        Expanded(
+            child: Container(
+                child: SingleChildScrollView(
+                    child: Column(children: [
+          Row(children: [
+            _buildButton(''), //TODO change thid in exchange for proper spacing.
+          ]),
+          Row(children: [
+            _buildButton('History'), //Have a horizontal bar/break here?
+          ]),
+          for (int i = 0; i < this.widget.eqcalc.history.length; i++)
+            _buildHistoryItem(i),
+        ])))),
+      ],
+    );
+  }
+
+  Widget _buildHistoryItem(int Index) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [_buildEquationButton(widget.eqcalc.history[Index][0])],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [_buildEquationButton(widget.eqcalc.history[Index][1])],
+        )
+      ],
+
     );
   }
 
@@ -413,12 +489,23 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
+  Widget _buildModeOfCalc() {
+    if (historyMode) {
+      return _buildHistoryMode();
+    } else {
+      return _buildNormalMode();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var currentIndex = 0;
 
     return Scaffold(
-      body: _buildNormalMode(),
+
+
+      body: _buildModeOfCalc(),
+
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
