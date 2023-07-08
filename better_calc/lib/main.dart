@@ -219,9 +219,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           child: Column(
             children: [
               Row(children: [
-                _buildButton(''), //TODO change this forproper spacing styling
-              ]),
-              Row(children: [
                 _buildButton('History'),
               ]),
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -271,16 +268,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         Row(
           children: [
             _buildButton('2nd'),
-            _buildButton('sin'),
-            _buildButton('cos'),
-            _buildButton('tan'),
+            _buildSpecialButton('sin(', 'sin'),
+            _buildSpecialButton('cos(', 'cos'),
+            _buildSpecialButton('tan(', 'tan'),
           ],
         ),
         Row(
           children: [
-            _buildButton('x^y'),
-            _buildButton('log'),
+            _buildSpecialButton('^(', 'xⁿ'),
             _buildButton('ℼ'),
+            _buildSpecialButton('log(', 'log'),
             _buildButton('%'),
           ],
         ),
@@ -343,21 +340,21 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           children: [
             _buildButton('2nd'),
             _buildSpecialButton('sin^-1(', 'sin⁻¹'),
-            _buildSpecialButton('cos^-1', 'cos⁻¹'),
-            _buildSpecialButton('tan^-1', 'tan⁻¹'),
+            _buildSpecialButton('cos^-1(', 'cos⁻¹'),
+            _buildSpecialButton('tan^-1(', 'tan⁻¹'),
           ],
         ),
         Row(
           children: [
             _buildSpecialButton('[]√(', 'ⁿ√‾‾'),
-            _buildSpecialButton('log[](', 'log₍ ₎'),
             _buildSpecialButton('ℯ', '𝘦'),
-            _buildButton('%'),
+            _buildSpecialButton('log[](', 'log₍ ₎'),
+            _buildSpecialButton('ln(', 'ln'),
           ],
         ),
         Row(
           children: [
-            _buildButton('x^2'),
+            _buildSpecialButton('√(', '√‾‾'),
             _buildButton('('),
             _buildButton(')'),
             _buildButton('/')
@@ -427,9 +424,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             child: Container(
                 child: SingleChildScrollView(
                     child: Column(children: [
-          Row(children: [
-            _buildButton(''), //TODO change thid in exchange for proper spacing.
-          ]),
           Row(children: [
             _buildButton('History'), //Have a horizontal bar/break here?
           ]),

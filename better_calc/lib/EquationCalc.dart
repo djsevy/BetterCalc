@@ -64,6 +64,7 @@ class EquationCalc {
         converted = convertEquation(currentEquation);
       } catch (e) {
         //Syntax Error
+        converted = SYNTAX_ERROR; //not changing from the "" above is likely what was causing the error where nothign showed up on a string ending in '-'
         errorState = true;
         errorType = SYNTAX_ERROR;
       }
@@ -272,8 +273,8 @@ class EquationCalc {
     }
     //if no operands are found, meaning the string is just one 'number' but no valid number found, i.e. '-3-5'
     else if (validateOperand(equation) == false) {
-      // errorState = true;
-      // errorType = SYNTAX_ERROR;
+      errorState = true;
+      errorType = SYNTAX_ERROR;
       return errorType;
     }
 
