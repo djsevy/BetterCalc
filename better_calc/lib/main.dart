@@ -89,8 +89,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         // Clear the output
         _controller.clear();
         cursorIndex = 0; // Reset cursor index
-        widget.historystorage
-            .clearHistory(); //This would also normally force a setHistory to empty on eqCalc.
       } else if (buttonText == "History") {
       } else if (buttonText == '<') {
         // Move cursor to the left
@@ -208,10 +206,25 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           alignment: Alignment.topRight),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
-        buttonText,
+        _buildAnswerText(buttonText),
         style: const TextStyle(fontSize: 15.0),
       ),
     );
+  }
+
+  String _buildAnswerText(String buttonText) {
+    String converted = "";
+    if (scientificNotationMode) {
+      try {
+        converted = double.parse(buttonText).toStringAsExponential();
+      } catch (e) {
+        converted = buttonText;
+      }
+    }
+    else {
+      converted = buttonText;
+    }
+    return converted;
   }
 
   Widget _buildNormalMode() {
@@ -446,7 +459,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [_buildEquationButton(widget.eqcalc.history[Index][1])],
+          children: [_buildAnswerButton(widget.eqcalc.history[Index][1])],
         )
       ],
     );
@@ -480,15 +493,15 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       widget.historystorage.clearHistory();
       firstEquationEntered = false;
       widget.eqcalc.setHistory("");
-      print("tested");
+      // print("tested");
     });
   }
 
   void _updateSettingSciNot(bool current) {
     setState(() {
       scientificNotationMode = !scientificNotationMode;
-      print(scientificNotationMode);
-      print("tested2");
+      // print(scientificNotationMode);
+      // print("tested2");
     });
   }
 
@@ -606,7 +619,7 @@ class SettingsPageState extends State<SettingsPage> {
             )),
           ]),
           Row(children: [
-            Text("Display as"),
+            Text("Display all answers in scientific notation"),
             Switch(
               value: widget.scientificNotMode,
               onChanged: _setSciNotToggleState,
