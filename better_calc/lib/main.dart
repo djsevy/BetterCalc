@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'EquationCalc.dart';
 import 'HistoryStorage.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +51,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   bool secondMode = false;
 
   bool firstEquationEntered = false;
+  bool scientificNotationMode = false;
 
   @override
   void initState() {
@@ -472,6 +475,27 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     }
   }
 
+  void _updateSettingClearHistory(int count) {
+    setState(() {
+      widget.historystorage.clearHistory();
+      firstEquationEntered = false;
+      widget.eqcalc.setHistory("");
+      print("tested");
+    });
+  }
+
+  void _updateSettingSciNot(bool current) {
+    setState(() {
+      scientificNotationMode = !scientificNotationMode;
+      print(scientificNotationMode);
+      print("tested2");
+    });
+  }
+
+  bool _getSciNotMode() {
+    return scientificNotationMode;
+  }
+
   @override
   Widget build(BuildContext context) {
     var currentIndex = 0;
@@ -510,7 +534,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           } else if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
+              MaterialPageRoute(
+                  builder: (context) => SettingsPage(
+                      scientificNotMode: _getSciNotMode(),
+                      clearHistory: _updateSettingClearHistory,
+                      sciNotToggle: _updateSettingSciNot),
+              ),
             );
           }
         },
@@ -535,18 +564,58 @@ class NotesPage extends StatelessWidget {
   }
 }
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+class SettingsPage extends StatefulWidget {
+  
+  final ValueChanged<int> clearHistory;
+  final ValueChanged<bool> sciNotToggle;
+  bool scientificNotMode;
+  SettingsPage(
+      {required this.clearHistory,
+      required this.sciNotToggle,
+      required this.scientificNotMode,});
+  
+  @override
+  SettingsPageState createState() => SettingsPageState();
+}
+
+class SettingsPageState extends State<SettingsPage> {
+  
+
+  void _setSciNotToggleState(bool currentState) {
+    setState(() {
+      widget.sciNotToggle(widget.scientificNotMode);
+      widget.scientificNotMode = !widget.scientificNotMode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: const Center(
-        child: Text('Settings Page'),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Settings'),
+        ),
+        body: Column(children: [
+          Row(children: [
+            Expanded(
+                child: ElevatedButton(
+              onPressed: () =>
+                  widget.clearHistory(100), // Passing value to the parent widget.
+              child: Text(
+                  'Clear History'), //Would set stylings here, including margins? Or is that outside?
+              //Add another row do the 'display in scientific notation' toggle option. Oh, how aboutScienfific notation
+            )),
+          ]),
+          Row(children: [
+            Text("Display as"),
+            Switch(
+              value: widget.scientificNotMode,
+              onChanged: _setSciNotToggleState,
+              //     style: StyleElement(
+              // padding: const EdgeInsets.only(
+              //     left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
+              // alignment: Alignment.bottomLeft),
+            ),
+          ]),
+        ]));
   }
 }

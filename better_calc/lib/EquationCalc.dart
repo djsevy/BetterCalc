@@ -44,7 +44,7 @@ class EquationCalc {
 
       historyString = imported;
     } catch (e) {
-      // history = []; //do nothing, as this is already true
+      history = []; //do nothing, as this is already true
       //do nothing with historyString either
     }
   }
