@@ -5,6 +5,7 @@ import 'HistoryStorage.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:path_provider/path_provider.dart';
+import 'NotesStorage.dart';
 
 void main() {
   runApp(const CalculatorApp());
@@ -220,8 +221,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       } catch (e) {
         converted = buttonText;
       }
-    }
-    else {
+    } else {
       converted = buttonText;
     }
     return converted;
@@ -514,6 +514,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     var currentIndex = 0;
 
     return Scaffold(
+      appBar: AppBar(toolbarHeight: 0),
       body: _buildModeOfCalc(),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -542,16 +543,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           } else if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const NotesPage()),
+              MaterialPageRoute(builder: (context) => NotesPage()),
             );
           } else if (index == 2) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SettingsPage(
-                      scientificNotMode: _getSciNotMode(),
-                      clearHistory: _updateSettingClearHistory,
-                      sciNotToggle: _updateSettingSciNot),
+                builder: (context) => SettingsPage(
+                    scientificNotMode: _getSciNotMode(),
+                    clearHistory: _updateSettingClearHistory,
+                    sciNotToggle: _updateSettingSciNot),
               ),
             );
           }
@@ -561,39 +562,126 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 }
 
-class NotesPage extends StatelessWidget {
-  const NotesPage({super.key});
+class NotesPage extends StatefulWidget {
+  NotesPage({super.key});
+
+  final NotesStorage notesStorage = NotesStorage();
+
+  @override
+  _NotesPageState createState() => _NotesPageState();
+}
+
+class _NotesPageState extends State<NotesPage> {
+  TextEditingController _textEditingController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    // _focusNode = FocusNode();
+
+    _focusNode.requestFocus();
+    widget.notesStorage.readNotes().then((value) {
+      setState(() {
+        _textEditingController.text = value;
+        print('is this working?');
+        print(value);
+
+        //Can then do a print to see it to check if it's loading properly.
+      });
+    });
+  }
+
+  void _saveNotes() {
+    widget.notesStorage.writeToNotes(_textEditingController.text);
+    print('Saved');
+  }
+
+  Widget _buildSaveButton() {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+        ),
+        onPressed: () => _saveNotes(),
+        child: Text(
+          'Save',
+          style: const TextStyle(fontSize: 15.0),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotes() {
+    return Column(
+      children: [
+        Expanded(
+            child: Container(
+          child: Column(
+            children: [
+              Row(children: [
+                _buildSaveButton(),
+              ]),
+              Expanded(
+                  child: Container(
+                padding: const EdgeInsets.all(14.0),
+                alignment: Alignment.bottomRight,
+                child: GestureDetector(
+                  child: TextField(
+                    autofocus: true,
+                    showCursor: true,
+                    controller:
+                        _textEditingController, // Use TextEditingController
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your notes...',
+                    ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    onSubmitted: (_) {
+                      setState(() {
+                        _textEditingController.text +=
+                            '\n'; // Add a new line when the return button is pressed
+                      });
+                    },
+                    style: const TextStyle(
+                        fontSize: 15.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              )),
+            ],
+          ),
+        )),
+        const Divider(),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notes'),
-      ),
-      body: const Center(
-        child: Text('Notes Page'),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Notes'),
+        ),
+        body: _buildNotes());
   }
 }
 
 class SettingsPage extends StatefulWidget {
-  
   final ValueChanged<int> clearHistory;
   final ValueChanged<bool> sciNotToggle;
   bool scientificNotMode;
-  SettingsPage(
-      {required this.clearHistory,
-      required this.sciNotToggle,
-      required this.scientificNotMode,});
-  
+  SettingsPage({
+    required this.clearHistory,
+    required this.sciNotToggle,
+    required this.scientificNotMode,
+  });
+
   @override
   SettingsPageState createState() => SettingsPageState();
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  
-
   void _setSciNotToggleState(bool currentState) {
     setState(() {
       widget.sciNotToggle(widget.scientificNotMode);
@@ -611,8 +699,8 @@ class SettingsPageState extends State<SettingsPage> {
           Row(children: [
             Expanded(
                 child: ElevatedButton(
-              onPressed: () =>
-                  widget.clearHistory(100), // Passing value to the parent widget.
+              onPressed: () => widget
+                  .clearHistory(100), // Passing value to the parent widget.
               child: Text(
                   'Clear History'), //Would set stylings here, including margins? Or is that outside?
               //Add another row do the 'display in scientific notation' toggle option. Oh, how aboutScienfific notation
