@@ -188,13 +188,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget _buildEquationButton(String buttonText) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.only(
-              left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
-          alignment: Alignment.bottomLeft),
+        padding: const EdgeInsets.only(
+            left: 15.0, top: 10.0, bottom: 10.0, right: 15.0),
+      ),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
         buttonText,
-        style: const TextStyle(fontSize: 15.0),
+        style: const TextStyle(fontSize: 16.0),
       ),
     );
   }
@@ -202,13 +202,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget _buildAnswerButton(String buttonText) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.only(
-              left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
-          alignment: Alignment.topRight),
+        padding: const EdgeInsets.only(
+            left: 15.0, top: 10.0, bottom: 10.0, right: 15.0),
+      ),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
         _buildAnswerText(buttonText),
-        style: const TextStyle(fontSize: 15.0),
+        style: const TextStyle(fontSize: 16.0),
       ),
     );
   }
@@ -235,15 +235,21 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           child: Column(
             children: [
               Row(children: [
+                spacer(),
                 _buildButton('History'),
+                spacer(),
               ]),
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                spacer3(),
                 if (firstEquationEntered)
                   _buildEquationButton(widget.eqcalc.previousEquation),
+                spacer3(),
               ]),
               if (firstEquationEntered)
                 Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  spacer3(),
                   _buildAnswerButton(widget.eqcalc.previousAnswer),
+                  spacer3(),
                 ]),
               Expanded(
                   child: Container(
@@ -256,7 +262,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     showCursor: true,
                     controller: _controller, // Use TextEditingController
                     style: const TextStyle(
-                        fontSize: 15.0, fontWeight: FontWeight.bold),
+                        fontSize: 17.0, fontWeight: FontWeight.bold),
                     readOnly: true, // To prevent keyboard from popping up
                   ),
                 ),
@@ -264,79 +270,140 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             ],
           ),
         )),
-        const Divider(),
+        // const Divider(),
         if (secondMode) _buildSecondBody() else _buildFirstBody(),
       ],
     );
   }
 
+  Widget spacer() {
+    return SizedBox(width: 4.0, height: 2.0);
+  }
+
+  Widget spacer2() {
+    return SizedBox(width: 2.0, height: 1.0);
+  }
+
+  Widget spacer3() {
+    return SizedBox(width: 8.0, height: 4.0);
+  }
+
   Widget _buildFirstBody() {
     return Column(
       children: [
+        spacer(),
         Row(
           children: [
+            spacer(),
             _buildButton('C'),
+            spacer(),
             _buildButton('del'),
+            spacer(),
             _buildButton('<'),
+            spacer(),
             _buildButton('>'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('2nd'),
+            spacer(),
             _buildSpecialButton('sin(', 'sin'),
+            spacer(),
             _buildSpecialButton('cos(', 'cos'),
+            spacer(),
             _buildSpecialButton('tan(', 'tan'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildSpecialButton('^(', 'xⁿ'),
+            spacer(),
             _buildButton('ℼ'),
+            spacer(),
             _buildSpecialButton('log(', 'log'),
+            spacer(),
             _buildButton('%'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildSpecialButton('^2', 'x²'),
+            spacer(),
             _buildButton('('),
+            spacer(),
             _buildButton(')'),
-            _buildButton('/')
+            spacer(),
+            _buildButton('/'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('7'),
+            spacer(),
             _buildButton('8'),
+            spacer(),
             _buildButton('9'),
+            spacer(),
             _buildButton('*'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('4'),
+            spacer(),
             _buildButton('5'),
+            spacer(),
             _buildButton('6'),
+            spacer(),
             _buildButton('—'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('1'),
+            spacer(),
             _buildButton('2'),
+            spacer(),
             _buildButton('3'),
+            spacer(),
             _buildButton('+'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('0'),
+            spacer(),
             _buildButton('.'),
+            spacer(),
             _buildButton('-'),
+            spacer(),
             _buildButton('='),
+            spacer(),
           ],
         ),
+        spacer2(),
       ],
     );
   }
@@ -344,70 +411,119 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget _buildSecondBody() {
     return Column(
       children: [
+        spacer(),
         Row(
           children: [
+            spacer(),
             _buildButton('C'),
+            spacer(),
             _buildButton('del'),
+            spacer(),
             _buildButton('<'),
+            spacer(),
             _buildButton('>'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('2nd'),
+            spacer(),
             _buildSpecialButton('sin^-1(', 'sin⁻¹'),
+            spacer(),
             _buildSpecialButton('cos^-1(', 'cos⁻¹'),
+            spacer(),
             _buildSpecialButton('tan^-1(', 'tan⁻¹'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildSpecialButton('[]√(', 'ⁿ√‾‾'),
+            spacer(),
             _buildSpecialButton('ℯ', '𝘦'),
+            spacer(),
             _buildSpecialButton('log[](', 'log₍ ₎'),
+            spacer(),
             _buildSpecialButton('ln(', 'ln'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildSpecialButton('√(', '√‾‾'),
+            spacer(),
             _buildButton('('),
+            spacer(),
             _buildButton(')'),
-            _buildButton('/')
+            spacer(),
+            _buildButton('/'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('7'),
+            spacer(),
             _buildButton('8'),
+            spacer(),
             _buildButton('9'),
+            spacer(),
             _buildButton('*'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('4'),
+            spacer(),
             _buildButton('5'),
+            spacer(),
             _buildButton('6'),
+            spacer(),
             _buildButton('—'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('1'),
+            spacer(),
             _buildButton('2'),
+            spacer(),
             _buildButton('3'),
+            spacer(),
             _buildButton('+'),
+            spacer(),
           ],
         ),
+        spacer2(),
         Row(
           children: [
+            spacer(),
             _buildButton('0'),
+            spacer(),
             _buildButton('.'),
+            spacer(),
             _buildButton('-'),
+            spacer(),
             _buildButton('='),
+            spacer(),
           ],
         ),
+        spacer2(),
       ],
     );
   }
@@ -422,12 +538,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(13.0),
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
           displayText,
-          style: const TextStyle(fontSize: 15.0),
+          style: const TextStyle(fontSize: 16.5),
         ),
       ),
     );
@@ -441,7 +557,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 child: SingleChildScrollView(
                     child: Column(children: [
           Row(children: [
+            spacer(),
             _buildButton('History'), //Have a horizontal bar/break here?
+            spacer(),
           ]),
           for (int i = 0; i < this.widget.eqcalc.history.length; i++)
             _buildHistoryItem(i),
@@ -455,11 +573,19 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: [_buildEquationButton(widget.eqcalc.history[Index][0])],
+          children: [
+            spacer3(),
+            _buildEquationButton(widget.eqcalc.history[Index][0]),
+            spacer3(),
+          ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [_buildAnswerButton(widget.eqcalc.history[Index][1])],
+          children: [
+            spacer3(),
+            _buildAnswerButton(widget.eqcalc.history[Index][1]),
+            spacer3(),
+          ],
         )
       ],
     );
@@ -469,12 +595,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(13.0),
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
           buttonText,
-          style: const TextStyle(fontSize: 15.0),
+          style: const TextStyle(fontSize: 16.5),
         ),
       ),
     );
@@ -584,8 +710,8 @@ class _NotesPageState extends State<NotesPage> {
     widget.notesStorage.readNotes().then((value) {
       setState(() {
         _textEditingController.text = value;
-        print('is this working?');
-        print(value);
+        // print('is this working?');
+        // print(value);
 
         //Can then do a print to see it to check if it's loading properly.
       });
@@ -594,7 +720,11 @@ class _NotesPageState extends State<NotesPage> {
 
   void _saveNotes() {
     widget.notesStorage.writeToNotes(_textEditingController.text);
-    print('Saved');
+    // print('Saved');
+  }
+
+  Widget spacer() {
+    return SizedBox(width: 8.0, height: 4.0);
   }
 
   Widget _buildSaveButton() {
@@ -606,26 +736,32 @@ class _NotesPageState extends State<NotesPage> {
         onPressed: () => _saveNotes(),
         child: Text(
           'Save',
-          style: const TextStyle(fontSize: 15.0),
+          style: const TextStyle(fontSize: 17.0),
         ),
       ),
     );
   }
 
   Widget _buildNotes() {
+    
     return Column(
       children: [
         Expanded(
             child: Container(
           child: Column(
+            
             children: [
+              // spacer(),
               Row(children: [
+                // spacer(),
                 _buildSaveButton(),
+                // spacer(),
               ]),
+              // spacer(),
               Expanded(
                   child: Container(
                 padding: const EdgeInsets.all(14.0),
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.bottomLeft,
                 child: GestureDetector(
                   child: TextField(
                     autofocus: true,
@@ -689,6 +825,10 @@ class SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  Widget spacer() {
+    return SizedBox(width: 8.0, height: 4.0);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -696,18 +836,38 @@ class SettingsPageState extends State<SettingsPage> {
           title: const Text('Settings'),
         ),
         body: Column(children: [
+          spacer(),
           Row(children: [
+            spacer(),
             Expanded(
                 child: ElevatedButton(
-              onPressed: () => widget
-                  .clearHistory(100), // Passing value to the parent widget.
-              child: Text(
-                  'Clear History'), //Would set stylings here, including margins? Or is that outside?
-              //Add another row do the 'display in scientific notation' toggle option. Oh, how aboutScienfific notation
-            )),
+                    onPressed: () => widget.clearHistory(
+                        100), // Passing value to the parent widget.
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(13.0),
+                    ),
+                    child: Text(
+                      'Clear History',
+                      style: const TextStyle(
+                          fontSize:
+                              18), //Would set stylings here, including margins? Or is that outside?
+                      //Add another row do the 'display in scientific notation' toggle option. Oh, how aboutScienfific notation
+                    ))),
+            spacer(),
           ]),
-          Row(children: [
-            Text("Display all answers in scientific notation"),
+          spacer(),
+          spacer(),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            // spacer(),
+            Column(
+              children: [
+                Text("Display all answers in ",
+                  style: const TextStyle(fontSize: 18)),
+                Text("scientific notation: ",
+                  style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            
             Switch(
               value: widget.scientificNotMode,
               onChanged: _setSciNotToggleState,
@@ -716,6 +876,7 @@ class SettingsPageState extends State<SettingsPage> {
               //     left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
               // alignment: Alignment.bottomLeft),
             ),
+            // spacer(),
           ]),
         ]));
   }
