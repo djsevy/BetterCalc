@@ -1,9 +1,11 @@
+// import 'dart:html';
+
 import 'EquationCalc.dart';
 import 'HistoryStorage.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:path_provider/path_provider.dart';
-
+import 'NotesStorage.dart';
 
 void main() {
   runApp(const CalculatorApp());
@@ -16,9 +18,7 @@ class CalculatorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Calculator',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: CalculatorScreen(),
     );
   }
@@ -50,7 +50,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   bool secondMode = false;
 
   bool firstEquationEntered = false;
-
+  bool scientificNotationMode = false;
 
   @override
   void initState() {
@@ -88,8 +88,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         // Clear the output
         _controller.clear();
         cursorIndex = 0; // Reset cursor index
-        widget.historystorage
-            .clearHistory(); //This would also normally force a setHistory to empty on eqCalc.
       } else if (buttonText == "History") {
       } else if (buttonText == '<') {
         // Move cursor to the left
@@ -141,58 +139,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         return widget.eqcalc.previousAnswer;
       }
       //This is the string of things
-
     } catch (e) {
       return 'Error';
     }
-  }
-
-  Widget _buildToggleButton(String buttonText, bool showButtons) {
-    return Expanded(
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: showButtons ? Colors.white : null,
-          backgroundColor: showButtons ? Colors.blue : null,
-          padding: const EdgeInsets.all(15.0),
-        ),
-        onPressed: () => _buttonPressed(buttonText),
-        child: Text(
-          buttonText,
-          style: const TextStyle(fontSize: 15.0),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildToggledButtonsRow(List<String> buttons) {
-    return Row(
-      children:
-          buttons.map((buttonText) => _buildToggledButton(buttonText)).toList(),
-    );
-  }
-
-  Widget _buildToggledButton(String buttonText) {
-    return Expanded(
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(15.0),
-        ),
-        onPressed: () => _buttonPressed(buttonText),
-        child: Text(
-          buttonText,
-          style: const TextStyle(fontSize: 15.0),
-        ),
-      ),
-    );
   }
 
   Widget _buildEquationButton(String buttonText) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.only(
-
               left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
-
           alignment: Alignment.bottomLeft),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
@@ -210,10 +166,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           alignment: Alignment.topRight),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
-        buttonText,
+        _buildAnswerText(buttonText),
         style: const TextStyle(fontSize: 15.0),
       ),
     );
+  }
+
+  String _buildAnswerText(String buttonText) {
+    String converted = "";
+    if (scientificNotationMode) {
+      try {
+        converted = double.parse(buttonText).toStringAsExponential();
+      } catch (e) {
+        converted = buttonText;
+      }
+    } else {
+      converted = buttonText;
+    }
+    return converted;
   }
 
   Widget _buildNormalMode() {
@@ -224,17 +194,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           child: Column(
             children: [
               Row(children: [
-
-
-                _buildButton(''), //TODO change this forproper spacing styling
-
-              ]),
-              Row(children: [
                 _buildButton('History'),
               ]),
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-
-
                 if (firstEquationEntered)
                   _buildEquationButton(widget.eqcalc.previousEquation),
               ]),
@@ -242,7 +204,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   _buildAnswerButton(widget.eqcalc.previousAnswer),
                 ]),
-
               Expanded(
                   child: Container(
                 padding: const EdgeInsets.all(14.0),
@@ -273,7 +234,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       children: [
         Row(
           children: [
-            _buildButton('C'),
+            _builClearButton('C'),
             _buildButton('del'),
             _buildButton('<'),
             _buildButton('>'),
@@ -281,60 +242,58 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         ),
         Row(
           children: [
-            _buildButton('2nd'),
-            _buildButton('sin'),
-            _buildButton('cos'),
-            _buildButton('tan'),
+            _buildFirstSecondButton('2nd'),
+            _buildSpecialButton('sin(', 'sin'),
+            _buildSpecialButton('cos(', 'cos'),
+            _buildSpecialButton('tan(', 'tan'),
           ],
         ),
         Row(
           children: [
-            _buildButton('x^y'),
-            _buildButton('log'),
-            _buildButton('ℼ'),
-            _buildButton('%'),
+            _buildSpecialButton('^(', 'xⁿ'),
+            _buildNotSpecialButton('ℼ'),
+            _buildSpecialButton('log(', 'log'),
+            _buildNotSpecialButton('%'),
           ],
         ),
         Row(
           children: [
-
             _buildSpecialButton('^2', 'x²'),
-
-            _buildButton('('),
-            _buildButton(')'),
-            _buildButton('/')
+            _builOperatorButton('('),
+            _builOperatorButton(')'),
+            _builOperatorButton('/')
           ],
         ),
         Row(
           children: [
-            _buildButton('7'),
-            _buildButton('8'),
-            _buildButton('9'),
-            _buildButton('*'),
+            _buildNumpadButton('7'),
+            _buildNumpadButton('8'),
+            _buildNumpadButton('9'),
+            _builOperatorButton('*'),
           ],
         ),
         Row(
           children: [
-            _buildButton('4'),
-            _buildButton('5'),
-            _buildButton('6'),
-            _buildButton('—'),
+            _buildNumpadButton('4'),
+            _buildNumpadButton('5'),
+            _buildNumpadButton('6'),
+            _builOperatorButton('—'),
           ],
         ),
         Row(
           children: [
-            _buildButton('1'),
-            _buildButton('2'),
-            _buildButton('3'),
-            _buildButton('+'),
+            _buildNumpadButton('1'),
+            _buildNumpadButton('2'),
+            _buildNumpadButton('3'),
+            _builOperatorButton('+'),
           ],
         ),
         Row(
           children: [
-            _buildButton('0'),
-            _buildButton('.'),
-            _buildButton('-'),
-            _buildButton('='),
+            _buildNumpadButton('0'),
+            _buildNumpadButton('.'),
+            _buildNumpadButton('-'),
+            _builOperatorButton('='),
           ],
         ),
       ],
@@ -346,78 +305,71 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       children: [
         Row(
           children: [
-            _buildButton('C'),
+            _builClearButton('C'),
             _buildButton('del'),
-
-            _buildButton('<'),
-            _buildButton('>'),
-
+            _builOperatorButton('<'),
+            _builOperatorButton('>'),
           ],
         ),
         Row(
           children: [
-            _buildButton('2nd'),
-
+            _buildSecondButton('2nd'),
             _buildSpecialButton('sin^-1(', 'sin⁻¹'),
-            _buildSpecialButton('cos^-1', 'cos⁻¹'),
-            _buildSpecialButton('tan^-1', 'tan⁻¹'),
-
+            _buildSpecialButton('cos^-1(', 'cos⁻¹'),
+            _buildSpecialButton('tan^-1(', 'tan⁻¹'),
           ],
         ),
         Row(
           children: [
-
             _buildSpecialButton('[]√(', 'ⁿ√‾‾'),
-            _buildSpecialButton('log[](', 'log₍ ₎'),
             _buildSpecialButton('ℯ', '𝘦'),
-
-            _buildButton('%'),
+            _buildSpecialButton('log[](', 'log₍ ₎'),
+            _buildSpecialButton('ln(', 'ln'),
           ],
         ),
         Row(
           children: [
-            _buildButton('x^2'),
-            _buildButton('('),
-            _buildButton(')'),
-            _buildButton('/')
+            _buildSpecialButton('√(', '√‾‾'),
+            _builOperatorButton('('),
+            _builOperatorButton(')'),
+            _builOperatorButton('/')
           ],
         ),
         Row(
           children: [
-            _buildButton('7'),
-            _buildButton('8'),
-            _buildButton('9'),
-            _buildButton('*'),
+            _buildNumpadButton('7'),
+            _buildNumpadButton('8'),
+            _buildNumpadButton('9'),
+            _builOperatorButton('*'),
           ],
         ),
         Row(
           children: [
-            _buildButton('4'),
-            _buildButton('5'),
-            _buildButton('6'),
-            _buildButton('—'),
+            _buildNumpadButton('4'),
+            _buildNumpadButton('5'),
+            _buildNumpadButton('6'),
+            _builOperatorButton('—'),
           ],
         ),
         Row(
           children: [
-            _buildButton('1'),
-            _buildButton('2'),
-            _buildButton('3'),
-            _buildButton('+'),
+            _buildNumpadButton('1'),
+            _buildNumpadButton('2'),
+            _buildNumpadButton('3'),
+            _builOperatorButton('+'),
           ],
         ),
         Row(
           children: [
-            _buildButton('0'),
-            _buildButton('.'),
-            _buildButton('-'),
-            _buildButton('='),
+            _buildNumpadButton('0'),
+            _buildNumpadButton('.'),
+            _buildNumpadButton('-'),
+            _builOperatorButton('='),
           ],
         ),
       ],
     );
   }
-
 
   // Widget _buildIcon (String assetPath) {
   //   return const Icon(
@@ -437,6 +389,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           style: const TextStyle(fontSize: 15.0),
         ),
       ),
+    );
+  }
 
   Widget _buildHistoryMode() {
     return Column(
@@ -445,9 +399,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             child: Container(
                 child: SingleChildScrollView(
                     child: Column(children: [
-          Row(children: [
-            _buildButton(''), //TODO change thid in exchange for proper spacing.
-          ]),
           Row(children: [
             _buildButton('History'), //Have a horizontal bar/break here?
           ]),
@@ -467,10 +418,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [_buildEquationButton(widget.eqcalc.history[Index][1])],
+          children: [_buildAnswerButton(widget.eqcalc.history[Index][1])],
         )
       ],
-
     );
   }
 
@@ -489,6 +439,102 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
+  Widget _buildNumpadButton(String buttonText) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+          backgroundColor: Color.fromARGB(255, 209, 206, 206),
+        ),
+        onPressed: () => _buttonPressed(buttonText),
+        child: Text(
+          buttonText,
+          style: const TextStyle(fontSize: 15.0, color: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFirstSecondButton(String buttonText) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+          backgroundColor: Color.fromARGB(255, 146, 204, 148),
+        ),
+        onPressed: () => _buttonPressed(buttonText),
+        child: Text(
+          buttonText,
+          style: const TextStyle(fontSize: 15.0, color: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSecondButton(String buttonText) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+          backgroundColor: Colors.green,
+        ),
+        onPressed: () => _buttonPressed(buttonText),
+        child: Text(
+          buttonText,
+          style: const TextStyle(fontSize: 15.0, color: Colors.grey),
+        ),
+      ),
+    );
+  }
+
+  Widget _builOperatorButton(String buttonText) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+          backgroundColor: Color.fromARGB(255, 156, 154, 154),
+        ),
+        onPressed: () => _buttonPressed(buttonText),
+        child: Text(
+          buttonText,
+          style: const TextStyle(fontSize: 15.0, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _builClearButton(String buttonText) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+          backgroundColor: Colors.red,
+        ),
+        onPressed: () => _buttonPressed(buttonText),
+        child: Text(
+          buttonText,
+          style: const TextStyle(fontSize: 15.0, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotSpecialButton(String buttonText) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+          backgroundColor: Colors.blue,
+        ),
+        onPressed: () => _buttonPressed(buttonText),
+        child: Text(
+          buttonText,
+          style: const TextStyle(fontSize: 15.0, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
   Widget _buildModeOfCalc() {
     if (historyMode) {
       return _buildHistoryMode();
@@ -497,15 +543,34 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     }
   }
 
+  void _updateSettingClearHistory(int count) {
+    setState(() {
+      widget.historystorage.clearHistory();
+      firstEquationEntered = false;
+      widget.eqcalc.setHistory("");
+      // print("tested");
+    });
+  }
+
+  void _updateSettingSciNot(bool current) {
+    setState(() {
+      scientificNotationMode = !scientificNotationMode;
+      // print(scientificNotationMode);
+      // print("tested2");
+    });
+  }
+
+  bool _getSciNotMode() {
+    return scientificNotationMode;
+  }
+
   @override
   Widget build(BuildContext context) {
     var currentIndex = 0;
 
     return Scaffold(
-
-
+      appBar: AppBar(toolbarHeight: 0),
       body: _buildModeOfCalc(),
-
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -522,7 +587,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           ),
         ],
         currentIndex: currentIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: const Color.fromARGB(255, 129, 132, 135),
         onTap: (index) {
           setState(() {
             currentIndex = index;
@@ -533,12 +598,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           } else if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const NotesPage()),
+              MaterialPageRoute(builder: (context) => NotesPage()),
             );
           } else if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
+              MaterialPageRoute(
+                builder: (context) => SettingsPage(
+                    scientificNotMode: _getSciNotMode(),
+                    clearHistory: _updateSettingClearHistory,
+                    sciNotToggle: _updateSettingSciNot),
+              ),
             );
           }
         },
@@ -547,34 +617,161 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 }
 
-class NotesPage extends StatelessWidget {
-  const NotesPage({super.key});
+class NotesPage extends StatefulWidget {
+  NotesPage({super.key});
+
+  final NotesStorage notesStorage = NotesStorage();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notes'),
-      ),
-      body: const Center(
-        child: Text('Notes Page'),
+  _NotesPageState createState() => _NotesPageState();
+}
+
+class _NotesPageState extends State<NotesPage> {
+  TextEditingController _textEditingController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    // _focusNode = FocusNode();
+
+    _focusNode.requestFocus();
+    widget.notesStorage.readNotes().then((value) {
+      setState(() {
+        _textEditingController.text = value;
+        print('is this working?');
+        print(value);
+
+        //Can then do a print to see it to check if it's loading properly.
+      });
+    });
+  }
+
+  void _saveNotes() {
+    widget.notesStorage.writeToNotes(_textEditingController.text);
+    print('Saved');
+  }
+
+  Widget _buildSaveButton() {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+        ),
+        onPressed: () => _saveNotes(),
+        child: Text(
+          'Save',
+          style: const TextStyle(fontSize: 15.0),
+        ),
       ),
     );
   }
-}
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  Widget _buildNotes() {
+    return Column(
+      children: [
+        Expanded(
+            child: Container(
+          child: Column(
+            children: [
+              Row(children: [
+                _buildSaveButton(),
+              ]),
+              Expanded(
+                  child: Container(
+                padding: const EdgeInsets.all(14.0),
+                alignment: Alignment.bottomRight,
+                child: GestureDetector(
+                  child: TextField(
+                    autofocus: true,
+                    showCursor: true,
+                    controller:
+                        _textEditingController, // Use TextEditingController
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your notes...',
+                    ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    onSubmitted: (_) {
+                      setState(() {
+                        _textEditingController.text +=
+                            '\n'; // Add a new line when the return button is pressed
+                      });
+                    },
+                    style: const TextStyle(
+                        fontSize: 15.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              )),
+            ],
+          ),
+        )),
+        const Divider(),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: const Center(
-        child: Text('Settings Page'),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Notes'),
+        ),
+        body: _buildNotes());
+  }
+}
+
+class SettingsPage extends StatefulWidget {
+  final ValueChanged<int> clearHistory;
+  final ValueChanged<bool> sciNotToggle;
+  bool scientificNotMode;
+  SettingsPage({
+    required this.clearHistory,
+    required this.sciNotToggle,
+    required this.scientificNotMode,
+  });
+
+  @override
+  SettingsPageState createState() => SettingsPageState();
+}
+
+class SettingsPageState extends State<SettingsPage> {
+  void _setSciNotToggleState(bool currentState) {
+    setState(() {
+      widget.sciNotToggle(widget.scientificNotMode);
+      widget.scientificNotMode = !widget.scientificNotMode;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Settings'),
+        ),
+        body: Column(children: [
+          Row(children: [
+            Expanded(
+                child: ElevatedButton(
+              onPressed: () => widget
+                  .clearHistory(100), // Passing value to the parent widget.
+              child: Text(
+                  'Clear History'), //Would set stylings here, including margins? Or is that outside?
+              //Add another row do the 'display in scientific notation' toggle option. Oh, how aboutScienfific notation
+            )),
+          ]),
+          Row(children: [
+            Text("Display all answers in scientific notation"),
+            Switch(
+              value: widget.scientificNotMode,
+              onChanged: _setSciNotToggleState,
+              //     style: StyleElement(
+              // padding: const EdgeInsets.only(
+              //     left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
+              // alignment: Alignment.bottomLeft),
+            ),
+          ]),
+        ]));
   }
 }
