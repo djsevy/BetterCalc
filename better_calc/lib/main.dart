@@ -492,7 +492,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(13.0),
-            backgroundColor: Colors.indigoAccent),
+            backgroundColor: Color.fromARGB(255, 89, 169, 114)),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
           displayText,
@@ -550,7 +550,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(13.0),
-            backgroundColor: Color.fromARGB(255, 156, 154, 154)),
+            backgroundColor: Color.fromARGB(255, 184, 182, 182)),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
           buttonText,
@@ -581,7 +581,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(13.0),
-          backgroundColor: Colors.green,
+          backgroundColor: Color.fromARGB(255, 101, 228, 105),
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
@@ -597,7 +597,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(13.0),
-          backgroundColor: Color.fromARGB(255, 101, 228, 105),
+          backgroundColor: Colors.green,
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
@@ -645,7 +645,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(13.0),
-          backgroundColor: Colors.indigoAccent,
+          backgroundColor: Color.fromARGB(255, 89, 169, 114),
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
@@ -706,7 +706,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     var currentIndex = 0;
 
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 0),
+      appBar: AppBar(
+          toolbarHeight: 0,
+          backgroundColor: Color.fromARGB(255, 209, 206, 206)),
       body: _buildModeOfCalc(),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -858,8 +860,9 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Notes'),
-        ),
+            iconTheme: IconThemeData(color: Colors.black),
+            title: const Text('Notes', style: TextStyle(color: Colors.black)),
+            backgroundColor: Color.fromARGB(255, 209, 206, 206)),
         body: _buildNotes());
   }
 }
@@ -894,8 +897,12 @@ class SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Settings'),
-        ),
+            iconTheme: IconThemeData(color: Colors.black),
+            title: const Text(
+              'Settings',
+              style: TextStyle(color: Colors.black),
+            ),
+            backgroundColor: Color.fromARGB(255, 209, 206, 206)),
         body: Column(children: [
           spacer(),
           Row(children: [
