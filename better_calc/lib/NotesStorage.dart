@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-class HistoryStorage {
+class NotesStorage {
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
@@ -12,14 +12,14 @@ class HistoryStorage {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/betterCalcEquationHistory.txt');
+    return File('$path/bettercalc_notes.txt');
   }
 
-  Future<String> readHistory() async {
+  Future<String> readNotes() async {
     // print("Trying to find file");
     try {
       final file = await _localFile;
-      // print("found it");
+      print("found it");
       // Read the file
       final contents = await file.readAsString();
 
@@ -30,20 +30,10 @@ class HistoryStorage {
     }
   }
 
-  Future<File> writeToHistory(String history) async {
+  Future<File> writeToNotes(String notes) async {
     final file = await _localFile;
-    // print("writing to file");
+    print("writing to file");
     // Write the file
-    return file.writeAsString('$history');
-  }
-
-  clearHistory() async {
-    try {
-      final file = await _localFile;
-
-      await file.delete();
-    } catch (e) {
-      //No file, hey, at least it's already gone
-    }
+    return file.writeAsString(notes);
   }
 }

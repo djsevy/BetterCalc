@@ -149,11 +149,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.only(
               left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
-          alignment: Alignment.bottomLeft),
+          alignment: Alignment.bottomLeft,
+          backgroundColor: Colors.grey),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
         buttonText,
-        style: const TextStyle(fontSize: 15.0),
+        style: const TextStyle(fontSize: 15.0, color: Colors.black),
       ),
     );
   }
@@ -163,11 +164,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.only(
               left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
-          alignment: Alignment.topRight),
+          alignment: Alignment.topRight,
+          backgroundColor: Colors.grey),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
         _buildAnswerText(buttonText),
-        style: const TextStyle(fontSize: 15.0),
+        style: const TextStyle(fontSize: 15.0, color: Colors.black),
       ),
     );
   }
@@ -235,9 +237,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         Row(
           children: [
             _builClearButton('C'),
-            _buildButton('del'),
-            _buildButton('<'),
-            _buildButton('>'),
+            _buildSecondOperatorButton('del'),
+            _buildSecondOperatorButton('<'),
+            _buildSecondOperatorButton('>'),
           ],
         ),
         Row(
@@ -306,9 +308,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         Row(
           children: [
             _builClearButton('C'),
-            _buildButton('del'),
-            _builOperatorButton('<'),
-            _builOperatorButton('>'),
+            _buildSecondOperatorButton('del'),
+            _buildSecondOperatorButton('<'),
+            _buildSecondOperatorButton('>'),
           ],
         ),
         Row(
@@ -371,18 +373,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  // Widget _buildIcon (String assetPath) {
-  //   return const Icon(
-
-  //   )
-  // }
-
   Widget _buildSpecialButton(String buttonText, String displayText) {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(15.0),
-        ),
+            padding: const EdgeInsets.all(15.0),
+            backgroundColor: Colors.indigoAccent),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
           displayText,
@@ -460,7 +456,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(15.0),
-          backgroundColor: Color.fromARGB(255, 146, 204, 148),
+          backgroundColor: Colors.green,
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
@@ -476,12 +472,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(15.0),
-          backgroundColor: Colors.green,
+          backgroundColor: Color.fromARGB(255, 101, 228, 105),
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
           buttonText,
-          style: const TextStyle(fontSize: 15.0, color: Colors.grey),
+          style: const TextStyle(fontSize: 15.0, color: Colors.black),
         ),
       ),
     );
@@ -524,7 +520,23 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(15.0),
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.indigoAccent,
+        ),
+        onPressed: () => _buttonPressed(buttonText),
+        child: Text(
+          buttonText,
+          style: const TextStyle(fontSize: 15.0, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSecondOperatorButton(String buttonText) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(15.0),
+          backgroundColor: Colors.indigoAccent,
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
