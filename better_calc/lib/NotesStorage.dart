@@ -19,7 +19,6 @@ class NotesStorage {
     // print("Trying to find file");
     try {
       final file = await _localFile;
-      print("found it");
       // Read the file
       final contents = await file.readAsString();
 
@@ -32,7 +31,7 @@ class NotesStorage {
 
   Future<File> writeToNotes(String notes) async {
     final file = await _localFile;
-    print("writing to file");
+
     // Write the file
     return file.writeAsString(notes);
   }
