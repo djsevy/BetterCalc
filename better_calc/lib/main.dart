@@ -147,17 +147,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget _buildEquationButton(String buttonText) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-
           padding: const EdgeInsets.only(
               left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
-          
-          backgroundColor: Colors.grey),
+          backgroundColor: Color.fromARGB(255, 209, 206, 206)),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
         buttonText,
         style: const TextStyle(fontSize: 16.0, color: Colors.black),
-
-       
       ),
     );
   }
@@ -165,16 +161,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget _buildAnswerButton(String buttonText) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-
           padding: const EdgeInsets.only(
               left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
-        
-          backgroundColor: Colors.grey),
+          backgroundColor: Color.fromARGB(255, 209, 206, 206)),
       onPressed: () => _buttonPressed(buttonText),
       child: Text(
         _buildAnswerText(buttonText),
         style: const TextStyle(fontSize: 16.0, color: Colors.black),
-
       ),
     );
   }
@@ -201,17 +194,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           child: Column(
             children: [
               Row(children: [
-
                 spacer(),
-
                 _buildButton('History'),
                 spacer(),
               ]),
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-
-
                 spacer3(),
-
                 if (firstEquationEntered)
                   _buildEquationButton(widget.eqcalc.previousEquation),
                 spacer3(),
@@ -265,9 +253,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         spacer(),
         Row(
           children: [
-
             spacer(),
-            _builClearButton('C'),
+            _buildClearButton('C'),
             spacer(),
             _buildSecondOperatorButton('del'),
             spacer(),
@@ -275,13 +262,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildSecondOperatorButton('>'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildFirstSecondButton('2nd'),
             spacer(),
@@ -291,13 +276,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildSpecialButton('tan(', 'tan'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildSpecialButton('^(', 'xⁿ'),
             spacer(),
@@ -307,29 +290,25 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildNotSpecialButton('%'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildSpecialButton('^2', 'x²'),
             spacer(),
-            _builOperatorButton('('),
+            _buildOperatorButton('('),
             spacer(),
-            _builOperatorButton(')'),
+            _buildOperatorButton(')'),
             spacer(),
-            _builOperatorButton('/'),
+            _buildOperatorButton('/'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildNumpadButton('7'),
             spacer(),
@@ -337,15 +316,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildNumpadButton('9'),
             spacer(),
-            _builOperatorButton('*'),
+            _buildOperatorButton('*'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildNumpadButton('4'),
             spacer(),
@@ -353,15 +330,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildNumpadButton('6'),
             spacer(),
-            _builOperatorButton('—'),
+            _buildOperatorButton('—'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildNumpadButton('1'),
             spacer(),
@@ -369,15 +344,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildNumpadButton('3'),
             spacer(),
-            _builOperatorButton('+'),
+            _buildOperatorButton('+'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildNumpadButton('0'),
             spacer(),
@@ -385,9 +358,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildNumpadButton('-'),
             spacer(),
-            _builOperatorButton('='),
+            _buildOperatorButton('='),
             spacer(),
-
           ],
         ),
         spacer2(),
@@ -401,9 +373,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         spacer(),
         Row(
           children: [
-
             spacer(),
-            _builClearButton('C'),
+            _buildClearButton('C'),
             spacer(),
             _buildSecondOperatorButton('del'),
             spacer(),
@@ -411,13 +382,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildSecondOperatorButton('>'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildSecondButton('2nd'),
             spacer(),
@@ -427,13 +396,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildSpecialButton('tan^-1(', 'tan⁻¹'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildSpecialButton('[]√(', 'ⁿ√‾‾'),
             spacer(),
@@ -443,29 +410,25 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildSpecialButton('ln(', 'ln'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildSpecialButton('√(', '√‾‾'),
             spacer(),
-            _builOperatorButton('('),
+            _buildOperatorButton('('),
             spacer(),
-            _builOperatorButton(')'),
+            _buildOperatorButton(')'),
             spacer(),
-            _builOperatorButton('/'),
+            _buildOperatorButton('/'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildNumpadButton('7'),
             spacer(),
@@ -473,15 +436,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildNumpadButton('9'),
             spacer(),
-            _builOperatorButton('*'),
+            _buildOperatorButton('*'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildNumpadButton('4'),
             spacer(),
@@ -489,15 +450,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildNumpadButton('6'),
             spacer(),
-            _builOperatorButton('—'),
+            _buildOperatorButton('—'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildNumpadButton('1'),
             spacer(),
@@ -505,15 +464,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildNumpadButton('3'),
             spacer(),
-            _builOperatorButton('+'),
+            _buildOperatorButton('+'),
             spacer(),
-
           ],
         ),
         spacer2(),
         Row(
           children: [
-
             spacer(),
             _buildNumpadButton('0'),
             spacer(),
@@ -521,9 +478,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             spacer(),
             _buildNumpadButton('-'),
             spacer(),
-            _builOperatorButton('='),
+            _buildOperatorButton('='),
             spacer(),
-
           ],
         ),
         spacer2(),
@@ -531,15 +487,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-
   Widget _buildSpecialButton(String buttonText, String displayText) {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-
             padding: const EdgeInsets.all(13.0),
             backgroundColor: Colors.indigoAccent),
-
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
           displayText,
@@ -557,7 +510,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 child: SingleChildScrollView(
                     child: Column(children: [
           Row(children: [
-
             spacer(),
 
             _buildButton('History'), //Have a horizontal bar/break here?
@@ -583,13 +535,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-
           children: [
             spacer3(),
             _buildAnswerButton(widget.eqcalc.history[Index][1]),
             spacer3(),
           ],
-
         )
       ],
     );
@@ -599,12 +549,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(13.0),
-        ),
+            padding: const EdgeInsets.all(13.0),
+            backgroundColor: Color.fromARGB(255, 156, 154, 154)),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
           buttonText,
-          style: const TextStyle(fontSize: 16.5),
+          style: const TextStyle(fontSize: 16.5, color: Colors.black),
         ),
       ),
     );
@@ -658,7 +608,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  Widget _builOperatorButton(String buttonText) {
+  Widget _buildOperatorButton(String buttonText) {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -674,12 +624,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  Widget _builClearButton(String buttonText) {
+  Widget _buildClearButton(String buttonText) {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(13.0),
-          backgroundColor: Colors.red,
+          backgroundColor: Color.fromARGB(255, 200, 53, 43),
         ),
         onPressed: () => _buttonPressed(buttonText),
         child: Text(
@@ -827,7 +777,6 @@ class _NotesPageState extends State<NotesPage> {
       setState(() {
         _textEditingController.text = value;
 
-
         //Can then do a print to see it to check if it's loading properly.
       });
     });
@@ -835,54 +784,45 @@ class _NotesPageState extends State<NotesPage> {
 
   void _saveNotes() {
     widget.notesStorage.writeToNotes(_textEditingController.text);
-
-    
   }
 
   Widget spacer() {
     return SizedBox(width: 8.0, height: 4.0);
-
   }
 
   Widget _buildSaveButton() {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(15.0),
-        ),
+            padding: const EdgeInsets.all(15.0),
+            backgroundColor: const Color.fromARGB(255, 40, 121, 42)),
         onPressed: () => _saveNotes(),
         child: Text(
           'Save',
-
           style: const TextStyle(fontSize: 17.0),
-
         ),
       ),
     );
   }
 
   Widget _buildNotes() {
-
     return Column(
       children: [
         Expanded(
             child: Container(
           child: Column(
-
-            
             children: [
-              // spacer(),
+              spacer(),
               Row(children: [
-                // spacer(),
+                spacer(),
                 _buildSaveButton(),
-                // spacer(),
+                spacer(),
               ]),
-              // spacer(),
+              spacer(),
               Expanded(
                   child: Container(
                 padding: const EdgeInsets.all(14.0),
-                alignment: Alignment.bottomLeft,
-
+                alignment: Alignment.topLeft,
                 child: GestureDetector(
                   child: TextField(
                     autofocus: true,
@@ -946,11 +886,9 @@ class SettingsPageState extends State<SettingsPage> {
     });
   }
 
-
   Widget spacer() {
     return SizedBox(width: 8.0, height: 4.0);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -959,7 +897,6 @@ class SettingsPageState extends State<SettingsPage> {
           title: const Text('Settings'),
         ),
         body: Column(children: [
-
           spacer(),
           Row(children: [
             spacer(),
@@ -968,8 +905,8 @@ class SettingsPageState extends State<SettingsPage> {
                     onPressed: () => widget.clearHistory(
                         100), // Passing value to the parent widget.
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(13.0),
-                    ),
+                        padding: const EdgeInsets.all(13.0),
+                        backgroundColor: Color.fromARGB(255, 172, 47, 38)),
                     child: Text(
                       'Clear History',
                       style: const TextStyle(
@@ -986,12 +923,11 @@ class SettingsPageState extends State<SettingsPage> {
             Column(
               children: [
                 Text("Display all answers in ",
-                  style: const TextStyle(fontSize: 18)),
+                    style: const TextStyle(fontSize: 18)),
                 Text("scientific notation: ",
-                  style: const TextStyle(fontSize: 18)),
+                    style: const TextStyle(fontSize: 18)),
               ],
             ),
-            
 
             Switch(
               value: widget.scientificNotMode,
@@ -1001,7 +937,6 @@ class SettingsPageState extends State<SettingsPage> {
               //     left: 15.0, top: 8.0, bottom: 8.0, right: 15.0),
               // alignment: Alignment.bottomLeft),
             ),
-
           ]),
         ]));
   }
