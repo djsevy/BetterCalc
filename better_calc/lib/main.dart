@@ -193,6 +193,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             child: Container(
           child: Column(
             children: [
+              spacer(),
               Row(children: [
                 spacer(),
                 _buildButton('History'),
@@ -509,6 +510,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             child: Container(
                 child: SingleChildScrollView(
                     child: Column(children: [
+                      spacer(),
           Row(children: [
             spacer(),
 
@@ -815,6 +817,7 @@ class _NotesPageState extends State<NotesPage> {
           child: Column(
             children: [
               spacer(),
+              spacer(),
               Row(children: [
                 spacer(),
                 _buildSaveButton(),
@@ -904,6 +907,7 @@ class SettingsPageState extends State<SettingsPage> {
             ),
             backgroundColor: Color.fromARGB(255, 209, 206, 206)),
         body: Column(children: [
+          spacer(),
           spacer(),
           Row(children: [
             spacer(),

@@ -135,7 +135,7 @@ class EquationCalc {
 
   String convertOperatorlessMult(String equation) {
     //a number followed by anything that's not a number/float component/EMDAS operator/closing paren/bracket; or, a closing paren or num-symbol followed by a non-closing/non-operator
-    String operatorlessMultPattern = "([0-9-][^0-9.e\\)\\]#_\\*/\\^\\+-])|([\\)ℼℯ][^#_\\*/\\^\\)\\]])";
+    String operatorlessMultPattern = "([0-9-][^0-9.e\\)\\]#_\\*/\\^\\+-])|([\\)ℼℯ%][^#_\\*/\\^\\)\\]])";
 
     String equation2 = equation;
     // int multIndex = equation.indexOf(pattern)
